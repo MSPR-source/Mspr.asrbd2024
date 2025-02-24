@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Connexion</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.png') }}">
+<!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+<!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+<!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/Linearicons-Free-v1.0.0/icon-font.min.css') }}">
+<!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animate/animate.css') }}">
+<!--===============================================================================================-->	
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/css-hamburgers/hamburgers.min.css') }}">
+<!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animsition/css/animsition.min.css') }}">
+<!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
+<!--===============================================================================================-->	
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.css') }}">
+<!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+<!--===============================================================================================-->
+<style>
+	/* Conteneur de la section RGPD */
+.form-check {
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #f9f9f9; /* Couleur de fond subtile */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Style de la case à cocher */
+.form-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+    cursor: pointer;
+}
+
+/* Style du label */
+.form-check label {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Effet au survol */
+.form-check:hover {
+    background: #f1f1f1; /* Effet léger au survol */
+    border-color: #09309b;
+}
+
+/* Accentuation de la case cochée (navigateur moderne) */
+.form-check input[type="checkbox"]:checked {
+    accent-color: #007bff; /* Couleur bleue (modifiable) */
+}
+
+.flash {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.flash.success {
+    background-color: #28a745;
+    color: white;
+}
+
+.flash.danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.flash.warning {
+    background-color: #ffc107;
+    color: white;
+}
+
+.flash.info {
+    background-color: #17a2b8;
+    color: white;
+}
+</style>
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('{{ url_for('static', filename='images/img.png') }}');">
+
+			<div class="wrap-login100 p-t-30 p-b-50">
+				<span class="login100-form-title p-b-41">
+					Connexion
+				</span>
+				<form action="{{ url_for('login') }}" method="POST" class="login100-form validate-form p-b-33 p-t-5">
+                    
+                    <div class="wrap-input100 validate-input" data-validate="username">
+                        <input class="input100" type="text" name="username" placeholder="Username" required>
+                        <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+                    </div>
+                
+                    <div class="wrap-input100 validate-input" data-validate="Mot de passe">
+                        <input class="input100" type="password" name="password" placeholder="Mot de passe" required>
+                        <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                    </div>
+                
+                    <div class="container-login100-form-btn m-t-32">
+                        <button type="submit" class="login100-form-btn">
+                            Se connecter
+                        </button>
+                    </div>
+                </form>
+                
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+	<!-- Afficher les messages flash (erreurs, succès) -->
+    
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/animsition/js/animsition.min.js') }}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/select2/select2.min.js') }}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/daterangepicker/moment.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.js') }}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='vendor/countdowntime/countdowntime.js') }}"></script>
+<!--===============================================================================================-->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil de {{ client.username }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/all.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/framework.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/master.css') }}">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .scan-result {
+            background: #f7f7f7;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <h1>Profil de {{ client.username }}</h1>
+        <p><strong>Nom:</strong> {{ client.name }}</p>
+        <p><strong>Rôle:</strong> {{ client.role }}</p>
+
+        <h2>Résultats de scan</h2>
+        {% if scan_results %}
+            {% for scan in scan_results %}
+                <div class="scan-result">
+                    <p><strong>Hôte:</strong> {{ scan.hostname }}</p>
+                    <p><strong>État:</strong> {{ scan.state }}</p>
+                    <p><strong>Type de machine:</strong> {{ scan.machine_type }}</p>
+                    <p><strong>Système d'exploitation:</strong> {{ scan.os }}</p>
+                    <p><strong>Latence WAN:</strong> {{ scan.wan_latency }} ms</p>
+                    {% if last_scan %}
+                       <p><strong>Date:</strong> {{ last_scan.timestamp.strftime('%d/%m/%Y %H:%M') }}</p>
+                       <p><strong>OS:</strong> {{ last_scan.os }}</p>
+                       <p><strong>Résultat:</strong> {{ last_scan.result }}</p>
+                    {% else %}
+                       <p>Aucun scan trouvé pour ce client.</p>
+                   {% endif %}
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucun résultat de scan disponible.</p>
+        {% endif %}
+
+        <a href="{{ url_for('clients') }}" class="back-btn">Retour à la liste des clients</a>
+    </div>
+
+</body>
+</html>

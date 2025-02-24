@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Administrateur</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/all.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/framework.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/master.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="page d-flex">
+      <div class="sidebar bg-white p-20 p-relative">
+        <h3 class="p-relative txt-c mt-0">Nester</h3>
+        <ul>
+          <li>
+            <a class="active d-flex align-center fs-14 c-black rad-6 p-10" href="index.html">
+              <i class="fa-regular fa-chart-bar fa-fw"></i>
+              <span>Accueil</span>
+            </a>
+          </li>
+         
+          <li>
+            <a class="d-flex align-center fs-14 c-black rad-6 p-10" href="{{ url_for('clients') }}">
+              <i class="fa-regular fa-circle-user fa-fw"></i>
+              <span>x</span>
+            </a>
+          </li>
+          <li>
+            <a class="d-flex align-center fs-14 c-black rad-6 p-10" href="{{ url_for('register') }}">
+              <i class="fa-regular fa-file fa-fw"></i>
+              <span>Créer un utilisateur</span>
+            </a>
+          </li>
+          <li>
+            <form action="{{ url_for('logout') }}" method="post" class="d-inline">
+              
+                <button type="submit" class="d-flex align-center fs-14 c-black rad-6 p-10 bg-none border-none">
+                  <i class="fa-regular fa-credit-card fa-fw"></i>
+                  <span>Déconnexion</span>
+                </button>
+            </form>
+          </li>
+        </ul>
+      </div>
+      <div class="content w-full">
+        <!-- Start Head -->
+        <div class="head bg-white p-15 between-flex">
+          <div class="search p-relative">
+            <input class="p-10" type="search" id="searchInput" placeholder="Search by Username" onkeyup="searchByUsername()" />
+          </div>
+        
+          <div id="searchResults"></div> <!-- Pour afficher les résultats de la recherche -->
+          <div class="icons d-flex align-center">
+            <span class="notification p-relative">
+              <i class="fa-regular fa-bell fa-lg"></i>
+            </span>
+            <img src="static/imgs/avatar.png" alt="" />
+          </div>
+        </div>
+        <!-- End Head -->
+        <h1 class="p-relative">Dashboard</h1>
+        <div class="wrapper d-grid gap-20">
+          <!-- Start Welcome Widget -->
+          <div class="welcome bg-white rad-10 txt-c-mobile block-mobile">
+            <div class="intro p-20 d-flex space-between bg-eee">
+              <div>
+                <h2 class="m-0">{{ current_user.role }}</h2>
+                <p class="c-grey mt-5">{{ current_user.username }}</p>
+              </div>
+              <img class="hide-mobile" src="static/imgs/welcome.png" alt="" />
+            </div>
+            <img src="static/imgs/avatar.png" alt="" class="avatar" />
+            
+            <a href="profile.html" class="visit d-block fs-14 bg-blue c-white w-fit btn-shape">Paramètre</a>
+          </div>
+          <!-- End Welcome Widget -->
+         
+          <!-- Start End Media Stats Widget -->
+        </div>
+       <!-- Start Clients Table -->
+<div class="projects p-20 bg-white rad-10 m-20">
+  <h2 class="mt-0 mb-20">Clients</h2>
+  <div class="responsive-table">
+    <table class="fs-15 w-full">
+      <thead>
+        <tr>
+          <td>ID</td>
+          <td>Name</td>
+          <td>Username</td>
+          <td>Actions</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.username }}</td>
+          <td>
+            {% if current_user.role == 'admin' %}
+            <form action="{{ url_for('delete_user', id=user.id) }}" method="POST" style="display:inline;">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- End Clients Table -->
+
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>

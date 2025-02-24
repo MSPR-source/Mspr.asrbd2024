@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Administrateur</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/all.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/framework.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/master.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap" rel="stylesheet" />
+    <style>
+      
+      .client-card {
+        display: inline-block;
+        width: 220px;
+        height: 200px;
+        background-color: #f7f7f7;
+        border-radius: 10px;
+        margin: 15px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .client-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .client-card h3 {
+        font-size: 18px;
+        color: #333;
+      }
+
+      .client-card p {
+        font-size: 14px;
+        color: #555;
+      }
+
+      .clients-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn-danger {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+      }
+
+      .btn-danger:hover {
+        background-color: darkred;
+      }
+
+      .btn-profile {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+    
+      .btn-profile:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page d-flex">
+      <div class="sidebar bg-white p-20 p-relative">
+        <h3 class="p-relative txt-c mt-0">Nester</h3>
+        <ul>
+          <li>
+            <a class="active d-flex align-center fs-14 c-black rad-6 p-10" href="{{ url_for('admin_dashboard') }}">
+              <i class="fa-regular fa-chart-bar fa-fw"></i>
+              <span>Accueil</span>
+            </a>
+          </li>
+          <li>
+            <a class="d-flex align-center fs-14 c-black rad-6 p-10" href="{{ url_for('clients') }}">
+              <i class="fa-regular fa-circle-user fa-fw"></i>
+              <span>Clients</span>
+            </a>
+          </li>
+          <li>
+            <a class="d-flex align-center fs-14 c-black rad-6 p-10" href="{{ url_for('register') }}">
+              <i class="fa-regular fa-file fa-fw"></i>
+              <span>Créer un utilisateur</span>
+            </a>
+          </li>
+          <li>
+            <form action="{{ url_for('logout') }}" method="post" class="d-inline">
+              <button type="submit" class="d-flex align-center fs-14 c-black rad-6 p-10 bg-none border-none">
+                <i class="fa-regular fa-credit-card fa-fw"></i>
+                <span>Déconnexion</span>
+              </button>
+            </form>
+          </li>
+        </ul>
+      </div>
+      <div class="content w-full">
+        <!-- Start Head -->
+        <div class="head bg-white p-15 between-flex">
+            <div class="search p-relative">
+                <input class="p-10" type="search" id="searchInput" placeholder="Search by Username" onkeyup="searchByUsername()" />
+            </div>
+            
+            <!-- Zone des résultats de recherche -->
+            <div id="searchResults" class="search-results"></div>
+            
+          <div class="icons d-flex align-center">
+            <span class="notification p-relative">
+              <i class="fa-regular fa-bell fa-lg"></i>
+            </span>
+            <img src="static/imgs/avatar.png" alt="" />
+          </div>
+        </div>
+        <!-- End Head -->
+        <h1 class="p-relative">Dashboard</h1>
+        
+        <!-- Start Clients Cards -->
+        <div class="clients-container">
+          {% for user in users %}
+          <div class="client-card">
+            <h3>{{ user.username }}</h3>
+            <p>Nom: {{ user.name }}</p>
+            <p>Système d'exploitation: {{ user.last_scan_os }}</p>
+          
+            <!-- Bouton Voir Profil -->
+            <a href="{{ url_for('client_profile', id=user.id) }}" class="btn-profile">Voir Profil</a>
+          
+            <form action="{{ url_for('delete_user', id=user.id) }}" method="POST" style="display:inline;">
+              <button type="submit" class="btn-danger">Supprimer</button>
+            </form>
+          </div>
+          
+          {% else %}
+            <p>Aucun client trouvé.</p>
+          {% endfor %}
+        </div>
+        <!-- End Clients Cards -->
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  </body>
+</html>
