@@ -5,10 +5,11 @@ import sys
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from flask import request, jsonify
-
+from flask_socketio import SocketIO
 # Ajoute le dossier parent "prj-finale-réseau" dans sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
+from sqlalchemy import extract
+from datetime import datetime
 from models import db, User, ScanResult
 
 from flask_migrate import Migrate
@@ -22,7 +23,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # api = Api(app)
-
+socketio = SocketIO(app, cors_allowed_origins="*")
 # # Ajouter les ressources à l'API
 # api.add_resource(UserResource, '/api/user/<int:user_id>')
 # api.add_resource(ScanResultResource, '/api/scan/<int:scan_id>')
@@ -53,6 +54,14 @@ def search_by_username():
 
     return jsonify(results)  # Retourner les résultats en JSON
 
+def get_scans_by_time():
+    now = datetime.utcnow()
+    scans = ScanResult.query.filter(
+        extract('hour', ScanResult.timestamp) == now.hour,
+        extract('minute', ScanResult.timestamp) == now.minute
+    ).all()
+    return scans
+
 # Route de connexion
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -69,6 +78,70 @@ def login():
             flash("Invalid username or password", "danger")
 
     return render_template('login.html')
+
+@app.route('/scan/<int:client_id>')
+def scan_client(client_id):
+    client = User.query.get_or_404(client_id)
+
+    # Simuler un scan (remplace cette partie par l'intégration réelle)
+    new_scan = ScanResult(
+        user_id=client.id,
+        hostname="192.168.1.1",
+        state="Actif",
+        machine_type="Serveur",
+        os="Linux Ubuntu 22.04",
+        wan_latency=12.5
+    )
+
+    db.session.add(new_scan)
+    db.session.commit()
+
+   
+    return redirect(url_for('clients_profile', client_id=client.id))
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/send_notification')
+def send_notification():
+    """ Envoie une notification pour le dernier scan enregistré en BDD. """
+
+    # Récupérer le dernier scan
+    dernier_scan = ScanResult.query.order_by(ScanResult.id.desc()).first()
+    if not dernier_scan:
+        return "Aucun scan trouvé en base de données."
+
+    # Récupérer l'utilisateur lié au scan
+    user = User.query.get(dernier_scan.user_id)
+    username = user.username if user else "Utilisateur inconnu"
+
+    message = f"🔔 Un nouveau scan de {username} est reçu !"
+    
+    # Envoyer la notification via WebSocket
+    socketio.emit('new_scan', {'message': message})
+
+    return message  # Affiche juste le message dans le navigateur
+
+from sqlalchemy import extract
+
+@app.route('/client_profile/<int:id>')
+def client_profile(id):
+    client = User.query.get_or_404(id)
+
+    # Récupérer l'heure et la minute du dernier scan
+    last_scan = ScanResult.query.filter(
+        ScanResult.user_id == client.id
+    ).order_by(ScanResult.timestamp.desc()).first()
+
+    scans = []
+    if last_scan:
+        scans = ScanResult.query.filter(
+            extract('hour', ScanResult.timestamp) == last_scan.timestamp.hour,
+            extract('minute', ScanResult.timestamp) == last_scan.timestamp.minute
+        ).all()
+
+    return render_template('client_profile.html', client=client, scans=scans, last_scan=last_scan)
 
 @app.route('/clients')
 def clients():
@@ -129,22 +202,6 @@ def register():
     return render_template('register.html')
 
 
-
-@app.route('/client_profile/<int:id>')
-def client_profile(id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
-    current_user = db.session.get(User, session['user_id'])
-    if not current_user or current_user.role != 'admin':
-        flash("Vous n'êtes pas autorisé à accéder à cette page.", "danger")
-        return redirect(url_for('home'))
-    
-    client = User.query.get_or_404(id)
-    last_scan = ScanResult.query.filter_by(user_id=id).order_by(ScanResult.timestamp.desc()).first()
-
-    return render_template('client_profile.html', client=client, last_scan=last_scan)
-
 # Route pour récupérer les utilisateurs (admin uniquement)
 @app.route('/admin_dashboard')
 def admin_dashboard():
@@ -189,4 +246,4 @@ def delete_user(id):
     return redirect(url_for('admin_dashboard'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

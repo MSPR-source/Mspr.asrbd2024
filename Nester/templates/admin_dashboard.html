@@ -11,6 +11,85 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+      .notification {
+        cursor: pointer;
+        position: relative;
+    }
+    .badge {
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        padding: 5px 8px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(50%, -50%);
+        display: none; /* Masqué par défaut */
+    }
+      .client-card {
+        display: inline-block;
+        width: 220px;
+        height: 200px;
+        background-color: #f7f7f7;
+        border-radius: 10px;
+        margin: 15px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .client-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .client-card h3 {
+        font-size: 18px;
+        color: #333;
+      }
+
+      .client-card p {
+        font-size: 14px;
+        color: #555;
+      }
+
+      .clients-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn-danger {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+      }
+
+      .btn-danger:hover {
+        background-color: darkred;
+      }
+
+      .btn-profile {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+    
+      .btn-profile:hover {
+        background-color: #0056b3;
+      }
+    </style>
   </head>
   <body>
     <div class="page d-flex">
@@ -19,30 +98,31 @@
         <ul>
           <li>
             <a class="active d-flex align-center fs-14 c-black rad-6 p-10" href="index.html">
-              <i class="fa-regular fa-chart-bar fa-fw"></i>
+              <i class="fa-solid fa-house"></i>
               <span>Accueil</span>
+              
             </a>
           </li>
          
           <li>
             <a class="d-flex align-center fs-14 c-black rad-6 p-10" href="{{ url_for('clients') }}">
-              <i class="fa-regular fa-circle-user fa-fw"></i>
-              <span>x</span>
+              <i class="fa-solid fa-folder-open"></i>
+              <span>Résultats du Scan</span>
             </a>
           </li>
           <li>
             <a class="d-flex align-center fs-14 c-black rad-6 p-10" href="{{ url_for('register') }}">
-              <i class="fa-regular fa-file fa-fw"></i>
+              <i class="fa-solid fa-circle-user"></i>
               <span>Créer un utilisateur</span>
             </a>
           </li>
           <li>
             <form action="{{ url_for('logout') }}" method="post" class="d-inline">
               
-                <button type="submit" class="d-flex align-center fs-14 c-black rad-6 p-10 bg-none border-none">
-                  <i class="fa-regular fa-credit-card fa-fw"></i>
+              <a type="submit" class="d-flex align-center fs-14 c-black rad-6 p-10 bg-none border-none">
+                <i class="fa-solid fa-right-from-bracket"></i>
                   <span>Déconnexion</span>
-                </button>
+              </a>
             </form>
           </li>
         </ul>
@@ -56,14 +136,15 @@
         
           <div id="searchResults"></div> <!-- Pour afficher les résultats de la recherche -->
           <div class="icons d-flex align-center">
-            <span class="notification p-relative">
+            <span class="notification" id="notifIcon">
               <i class="fa-regular fa-bell fa-lg"></i>
+              <span id="notifBadge" class="badge">0</span>
             </span>
             <img src="static/imgs/avatar.png" alt="" />
           </div>
         </div>
         <!-- End Head -->
-        <h1 class="p-relative">Dashboard</h1>
+        <h1 class="p-relative"></h1>
         <div class="wrapper d-grid gap-20">
           <!-- Start Welcome Widget -->
           <div class="welcome bg-white rad-10 txt-c-mobile block-mobile">
@@ -76,7 +157,7 @@
             </div>
             <img src="static/imgs/avatar.png" alt="" class="avatar" />
             
-            <a href="profile.html" class="visit d-block fs-14 bg-blue c-white w-fit btn-shape">Paramètre</a>
+            
           </div>
           <!-- End Welcome Widget -->
          
@@ -103,9 +184,12 @@
           <td>{{ user.username }}</td>
           <td>
             {% if current_user.role == 'admin' %}
+            <a href="{{ url_for('client_profile', id=user.id) }}" class="btn-profile">Voir Profil</a>
+          
             <form action="{{ url_for('delete_user', id=user.id) }}" method="POST" style="display:inline;">
-              <button type="submit" class="btn btn-danger">Delete</button>
+              <button type="submit" class="btn-danger">Supprimer</button>
             </form>
+          </div>
             {% endif %}
           </td>
         </tr>
@@ -119,5 +203,26 @@
       </div>
     </div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var socket = io.connect("http://" + document.domain + ":" + location.port);
+
+    socket.on("new_scan", function (data) {
+        let notifBadge = document.getElementById("notifBadge");
+        notifBadge.innerText = parseInt(notifBadge.innerText) + 1;
+        notifBadge.style.display = "inline";
+
+        alert(data.message); // Afficher une alerte avec le message
+    });
+
+    document.getElementById("notifIcon").addEventListener("click", function () {
+        document.getElementById("notifBadge").style.display = "none";
+    });
+});
+
+</script>
+
+
   </body>
 </html>

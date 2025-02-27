@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask import Flask
+from flask_socketio import SocketIO
+from sqlalchemy.sql import func
 
 db = SQLAlchemy()
 
@@ -34,7 +36,7 @@ class ScanResult(db.Model):
     machine_type = db.Column(db.String(50), nullable=False)
     os = db.Column(db.String(500), nullable=True)
     wan_latency = db.Column(db.Float, nullable=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, server_default=func.now(), nullable=False)
 
      # Relations avec Port et Vulnerability
     ports = db.relationship('Port', backref='scan_result', lazy=True, cascade="all, delete-orphan")
