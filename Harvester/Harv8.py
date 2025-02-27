@@ -230,7 +230,7 @@ class App:
         self.network_scanner = NetworkScanner()  # Crée une instance de la classe NetworkScanner pour effectuer des scans réseau
         
         # Définit l'icône de l'application à partir d'un fichier image
-        self.root.iconphoto(False, tk.PhotoImage(file="Harvester/icon.png"))
+        self.root.iconphoto(False, tk.PhotoImage(file="icon.png"))
         
         # Initialisation des variables pour les images de fond et de logo
         self.bg_photo = None
@@ -252,7 +252,7 @@ class App:
         """Crée tous les widgets de l'interface utilisateur"""
         # Image de fond
         try:
-            bg_image = Image.open("Harvester/image2.png").resize((500, 600))  # Charge et redimensionne l'image de fond
+            bg_image = Image.open("image2.png").resize((500, 600))  # Charge et redimensionne l'image de fond
             self.bg_photo = ImageTk.PhotoImage(bg_image)  # Convertit l'image en un format compatible avec Tkinter
             canvas = tk.Canvas(self.root, width=500, height=600)  # Crée un canvas pour afficher l'image
             canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")  # Affiche l'image de fond
@@ -263,7 +263,7 @@ class App:
 
         # Ajout du logo
         try:
-            logo_image = Image.open("Harvester/image2.png").resize((100, 100))  # Charge et redimensionne l'image du logo
+            logo_image = Image.open("image2.png").resize((100, 100))  # Charge et redimensionne l'image du logo
             self.logo_photo = ImageTk.PhotoImage(logo_image)  # Convertit l'image du logo en format compatible Tkinter
             logo_label = tk.Label(self.root, image=self.logo_photo, bg="#000000")  # Crée un label pour afficher le logo
             logo_label.place(relx=0.5, rely=0.2, anchor="center")  # Positionne le logo en haut de la fenêtre
@@ -388,7 +388,7 @@ class App:
        self.user_id = user_id  # Stocke l'ID utilisateur
 
        # Définition de l'icône de l'application dans le tableau de bord
-       self.dash.iconphoto(False, tk.PhotoImage(file="Harvester/icon.png"))
+       self.dash.iconphoto(False, tk.PhotoImage(file="icon.png"))
        # Création de l'arrière-plan (vous devez définir la méthode `create_background` pour cela)
        self.create_background()
        # Appel de la méthode pour afficher les résultats du scan du réseau
@@ -406,7 +406,7 @@ class App:
     
         try:
           # Charger l'image de fond à partir du fichier spécifié
-          self.bg_image = Image.open("Harvester/image2.png")  # Charge l'image à partir du chemin spécifié
+          self.bg_image = Image.open("image2.png")  # Charge l'image à partir du chemin spécifié
           self.bg_image = self.bg_image.resize((1000, 700), Image.Resampling.LANCZOS)  # Redimensionne l'image pour s'ajuster à la fenêtre du tableau de bord
           self.bg_photo = ImageTk.PhotoImage(self.bg_image)  # Convertit l'image en un format compatible avec Tkinter
        
@@ -662,7 +662,7 @@ class App:
      latency_window.title("Temps de Latence WAN")  # Définir le titre de la fenêtre
      latency_window.geometry("600x400")  # Définir les dimensions de la fenêtre
      latency_window.configure(bg="#202124")  # Définir la couleur de fond de la fenêtre
-     latency_window.iconphoto(False, tk.PhotoImage(file="Harvester/icon.png"))  # Ajouter une icône à la fenêtre
+     latency_window.iconphoto(False, tk.PhotoImage(file="icon.png"))  # Ajouter une icône à la fenêtre
 
      # Ajouter un label en haut de la fenêtre pour indiquer le titre
      tk.Label(
@@ -771,7 +771,7 @@ class App:
      results_window.title("Résultats du scan réseau")  # Définir le titre de la fenêtre
      results_window.geometry("1000x600")  # Définir la taille de la fenêtre
      results_window.configure(bg="#202124")  # Définir la couleur de fond sombre pour la fenêtre
-     results_window.iconphoto(False, tk.PhotoImage(file="Harvester/icon.png"))  # Ajouter une icône à la fenêtre
+     results_window.iconphoto(False, tk.PhotoImage(file="icon.png"))  # Ajouter une icône à la fenêtre
  
      # Ajouter un label en haut de la fenêtre pour indiquer l'objectif (Machines détectées)
      tk.Label(
@@ -926,7 +926,7 @@ class App:
      details_window.title(f"Détails de la machine : {host}")
      details_window.geometry("800x600")  # Taille de la fenêtre
      details_window.configure(bg="#202124")  # Fond de la fenêtre
-     details_window.iconphoto(False, tk.PhotoImage(file="Harvester/icon.png"))  # Icône de la fenêtre
+     details_window.iconphoto(False, tk.PhotoImage(file="icon.png"))  # Icône de la fenêtre
 
      # Cadre pour les informations principales de la machine
      frame = tk.Frame(details_window, bg="#202124")
@@ -1021,7 +1021,7 @@ Vulnérabilités : {vulnerabilities}
      details_window.title(f"Détails du scan: {scan.hostname}")  # Titre de la fenêtre avec le nom d'hôte
      details_window.geometry("1000x600")  # Définir la taille de la fenêtre
      details_window.configure(bg="#202124")  # Couleur de fond de la fenêtre
-     details_window.iconphoto(False, tk.PhotoImage(file="Harvester/icon.png"))  # Ajouter une icône à la fenêtre
+     details_window.iconphoto(False, tk.PhotoImage(file="icon.png"))  # Ajouter une icône à la fenêtre
 
      # Ajouter un label pour afficher la date et l'hôte du scan
      tk.Label(
@@ -1321,7 +1321,7 @@ Vulnérabilités : {vulnerabilities}
 # Lancement de l'application
 if __name__ == "__main__":
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DB_PATH = os.path.join(BASE_DIR, '../instance/users.db')  # Chemin d'accès à la base de données
+    DB_PATH = os.path.join(BASE_DIR, '../Nester/instance/users.db')  # Chemin d'accès à la base de données
     root = tk.Tk()
     app = App(root, DB_PATH)  # Création de l'application
     root.mainloop()  # Lancement de la boucle principale de l'application
