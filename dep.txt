@@ -1,0 +1,16 @@
+app-local :
+
+
+tk
+pillow
+nmap
+python-nmap
+werkzeug
+sqlite3
+webbrowser
+
+app-web :
+
+flask_sqlalchemy
+flask_socketio
+flask_migrate
